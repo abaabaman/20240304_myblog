@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import BlogView from '../views/BlogView.vue'
 import NoteView from '../views/NoteView.vue'
 import GameView from '../views/GameView.vue'
 import ToDoListView from '../views/ToDoListView.vue'
@@ -10,8 +10,12 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView
+      redirect: '/blog'
+    },
+    {
+      path: '/blog',
+      name: 'blog',
+      component: BlogView
     },
     {
       path: '/note',
@@ -24,8 +28,8 @@ const router = createRouter({
       component: GameView
     },
     {
-      path: '/ToDoList',
-      name: 'toDoList',
+      path: '/todoList',
+      name: 'todoList',
       component: ToDoListView
     },
     {

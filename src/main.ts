@@ -1,8 +1,11 @@
 import './common/styles/main.css'
 // import "element-plus/theme-chalk/src/message.scss";
 import { createApp } from 'vue'
+import ElementPlus from 'element-plus'
 import App from './App.vue'
 import router from './router'
+import { defineComponent } from 'vue'
+import { ElConfigProvider } from 'element-plus'
 
 // import VMdPreview from '@kangc/v-md-editor/lib/preview';
 // import '@kangc/v-md-editor/lib/style/preview.css';
@@ -16,6 +19,7 @@ import router from './router'
 
 const app = createApp(App);
 
+app.use(ElementPlus, { size: 'small', zIndex: 3000 })
 app.use(router);
 // app.use(VMdPreview);
 

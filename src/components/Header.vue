@@ -1,8 +1,37 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
+const activeIndex = ref('1')
+const handleSelect = (key: string, keyPath: string[]) => {
+    console.log(key, keyPath)
+}
+
 </script>
 
 <template>
+    <header>
+        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false"
+            @select="handleSelect">
+            <div class="banner">
+                <el-menu-item index="0" @click="$router.push('/')">
+                    <img style="width: 40px;margin-right: 12px" src="@/common/images/logo.png" alt="Element logo" />
+                    <h1>包包的博客</h1>
+                </el-menu-item>
+                <div class="flex-grow" />
+                <el-menu-item index="1" @click="$router.push('/blog')">博客</el-menu-item>
+                <el-menu-item index="2" @click="$router.push('/note')">笔记</el-menu-item>
+                <el-sub-menu index="3">
+                    <template #title>更多...</template>
+                    <el-menu-item index="3-1" @click="$router.push('/todoList')">待办</el-menu-item>
+                    <el-menu-item index="3-2" @click="$router.push('/game')">小游戏</el-menu-item>
+                    <el-menu-item index="3-3" @click="$router.push('/empty')">更多的更多...</el-menu-item>
+                </el-sub-menu>
+            </div>
+        </el-menu>
+    </header>
+</template>
+
+<!-- <template>
     <header>
         <div class="banner ">
             <div class="left">
@@ -30,76 +59,25 @@ import { RouterLink, RouterView } from 'vue-router'
             </nav>
         </div>
     </header>
-</template>
+</template> -->
 
 <style scoped>
+.flex-grow {
+    flex-grow: 1;
+}
+
 header {
-    position: absolute;
-    width: 100%;
+    /* position: absolute;
     height: 4rem;
     top: 0;
     background-color: orange;
-    z-index: 10;
+    z-index: 10; */
 
     .banner {
         display: flex;
         justify-content: space-between;
         height: 100%;
-    }
-
-    .left {
-        display: flex;
-        height: 100%;
-        align-items: center;
-
-        .logo {
-            display: block;
-            margin: 0 1rem;
-        }
-    }
-
-    .right {
-        display: flex;
-        align-items: center;
-
-        nav {
-            font-size: 12px;
-            margin-right: 5rem;
-        }
-
-        a {
-            display: block;
-            height: 100%;
-            padding: 1rem 3rem 0;
-            border: 2px solid red;
-        }
-
-
-        .more {
-            cursor: pointer;
-            position: relative;
-            background-color: aqua;
-            list-style: none;
-        }
-
-        .more:hover .sub_menu {
-            display: block;
-        }
-
-        .sub_menu {
-            display: none;
-            text-align: center;
-            position: absolute;
-            width: 140px;
-            top: 60px;
-            right: -2px;
-
-            a {
-                padding: 16px 0;
-            }
-        }
-
-
+        width: 100%;
     }
 }
 
