@@ -19,6 +19,8 @@ main {
   position: absolute;
   width: 100%;
   top: 4rem;
+  background-image: linear-gradient(90deg, #eee 50%, #fff 50%);
+  transform: rotate(3reg);
 }
 
 
