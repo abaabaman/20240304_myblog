@@ -10,5 +10,5 @@
     for($i=0;$i<$num;$i++){
         $arr[$i] = $result->fetch_assoc();
     }
-    echo '{"succeed":true,"data":'.json_encode($arr).'}';
+    echo json_encode($arr);
 ?>

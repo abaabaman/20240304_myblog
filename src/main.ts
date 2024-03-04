@@ -4,8 +4,19 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 
-const app = createApp(App)
+// import VMdPreview from '@kangc/v-md-editor/lib/preview';
+// import '@kangc/v-md-editor/lib/style/preview.css';
+// import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
+// import '@kangc/v-md-editor/lib/theme/style/github.css';
 
-app.use(router)
+// import Prism from 'prismjs';
+
+// VMdPreview.use(githubTheme);
+
+
+const app = createApp(App);
+
+app.use(router);
+// app.use(VMdPreview);
 
 app.mount('#app')
