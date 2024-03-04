@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>飞机大战</title>
+    <style>
+        *{padding: 0;margin: 0;}
+        li{list-style: none;}
+        main.bg{width: 320px;height: 568px;margin: 50px auto;background-image: url(./img/background.png);cursor: none;position: relative;
+            background-position: 0px 0px;background-repeat: repeat-y;}
+        main .lock{background-color: rgba(102, 102, 102, 0.3)!important;}
+        header{height: 100%;position: relative;padding-top: 0px}
+        header.out{padding-top: 500px;transition: padding-top 5s linear;}
+        /* 游戏人数 */
+        header div#player{position: absolute;color: #888;width: 100%;display: flex;bottom: 395px;}
+        header div#player>p{flex: 1;text-align: center;margin: 8px;padding: 15px 0;border: 3px solid #aaa;background-color: transparent;transition: color .3s;} 
+        header div#player>p.action{border: 3px solid #e9e9e9;color: white;}
+        header div.on#player>p.action{border: 3px dashed #fff;animation: borderAction 1s infinite}
+        /* 战机选择 */
+        header ul{position: absolute;bottom: 175px;}
+        header li{border: 3px solid #aaa;float: left;text-align: center;padding: 10px;width: 70px;height: 70px;position: relative;margin-left: 8px;margin-bottom: 8px;background-color: transparent;}
+        header li img{width: 50%;margin-top: 3px;position: relative;}
+        header li h3{color: #888;font-size: 16px;font-weight: normal;transition: color .3s;position: relative;}
+        header li.action{border: 3px solid #e9e9e9;}
+        header ul.on li.action{border: 3px dashed #fff;animation: borderAction 1s infinite;}
+        header li.action h3{color: #fff;}
+        header li.lock h3{color: #555;}
+        header li.lock::before{background: url(./img/lock.png) no-repeat 0px;background-size: 90px;content: '';width: 100%;height: 100%;position: absolute;left: 0;top: 0;opacity: .15;}
+        /* 开始游戏 */
+        header p#gameStart b{position: absolute;bottom: 120px;left: 0;width: calc(100% - 22px);text-align: center;font-size: 24px;color: #888;border: 3px solid #aaa;margin: 0 8px;padding: 5px 0;transition: color .3s;}
+        /* header p#gameStart b.action{color: #fff;border: 3px solid #e9e9e9} */
+        header p#gameStart.on b.action{color: #fff;border: 3px dashed #fff;animation: borderAction 1s infinite}
+        /* 按键提示 */
+        section.prompt{position: absolute;left: 20px;top: 20px;width: 85%;border: 3px dashed #666;opacity: 0;z-index: 5;}
+        section.prompt.action{animation: borderIdea 1s 2,borderIdeaHide 2s 2s forwards;color: white;opacity: 1;transition: opacity .5s;}
+        section.prompt p{margin: 10px 20px;text-align: center;color: #666;}
+        section.prompt b{color: rgb(92, 42, 42);margin-right: 5px;}
+        /* 游戏区 */
+        #game_area{width: 100%;height: 100%;position: absolute;top: 0;overflow: hidden;}
+        #game_area img{transition: transform 1s;}
+        #game_area img.Boarding{transform: translateY(150px);}
+        #game_area img.ammo.out{transform: scale(.3);transition: transform .2s;}
+        /* 飞机 */
+        div.myPlaneBox{z-index: 10;}
+        div.myPlaneBox.shake{animation-name: shake-opacity;animation-duration: 100ms;animation-iteration-count: infinite;animation-timing-function: ease-in-out;animation-delay: 0s;animation-play-state: running; }
+        div.myPlaneBox .myPlaneBlood{display: block;width: 100%;height: 5px;border: 1px solid #888;opacity: 0;transition: opacity .3s;}
+        div.myPlaneBox .myPlaneBlood.show{opacity: 1;}
+        div.myPlaneBox .myPlaneBloodNow{background-color: rgba(143, 80, 80, 0.5);height: 100%;}
+        /* 得分栏 */
+        #score{position: absolute;top: 5px;left: 10px;color: #ddd;letter-spacing: 3px;transition: opacity 2s 2s;opacity: 0;}
+        #score.out{opacity: 1;}
+        /* 结算栏 */
+        #game_over{position: absolute;top: calc(50% - 155px);left: calc(50% - 100px);width: 200px;height: 290px;
+            background-color: #ddd;border: 3px solid #aaa;opacity: 0;transform: scale(.3);transition: all .3s;}
+        #game_over.out{opacity: 1;transform: scale(1);}
+        #game_over.goout{transform: translateX(300px);}
+        #game_over .text{text-align: center;margin-top: 22px;}
+        #game_over p{color: rgb(107, 78, 78);font-size: 24px;font-weight: bold;}
+        #game_over p:nth-child(2){letter-spacing:7px;margin-left: 3px;}
+        #game_over p:last-child{font-size: 36px;margin-top: 5px;color:#555;}
+        #game_over>a{position: absolute;width: 66%;left: 17%;text-align: center;box-sizing: border-box;padding: 10px;cursor: none;
+            text-decoration: none;font-weight: bold;background-color: #ccc;border: 3px dashed #aaa;color: #eee}
+        #game_over>a#repeat{top: 150px;}
+        #game_over>a#history{top: 215px;}
+        #game_over>a.active{animation: borderAction 1s infinite;color: #fff;}
+        /* 历史记录 */
+        #history_list{position: absolute;top: calc(50% - 195px);left: calc(50% - 100px);width: 200px;height: 370px;
+            background-color: #ddd;border: 3px solid #aaa;transform: translateX(-300px);transition: transform .5s}
+        #history_list.out{transform: translateX(0);}
+        #history_list>h3{text-align: center;color: #333;line-height: 50px;margin-top: 5px;position: relative;z-index: 20;}
+        #history_list>h3::after{content: '';display: block;width: 120px;height: 8px;background-color: #ccc;position: absolute;left: calc(50% - 60px);top: 30px;z-index: -5;}
+        #history_list>a{position: absolute;width: 66%;left: 17%;text-align: center;box-sizing: border-box;padding: 5px 10px;cursor: none;
+            text-decoration: none;font-weight: bold;background-color: #ccc;border: 3px dashed #aaa;color: #eee}
+        #history_list>a#repeat{bottom: 20px;}
+        #history_list>a.active{animation: borderAction 1s infinite;color: #fff;}
+        #history_list dt,#history_list dd{display: flex;padding: 0 10px;font-size: 12px;}
+        #history_list dt{line-height: 26px;font-weight: bold;color: #555;}
+        #history_list dd{line-height: 22px;height: 22px;color: #333;border-bottom: 1px dashed #ccc;}
+        #history_list dd:last-child{border-bottom:none}
+        #history_list dd.last_dd{justify-content: center;font-weight: bold;}
+        #history_list dd:nth-of-type(1) :nth-child(1)::before{content: '';display: block;position: absolute;left: calc(50% - 8px);bottom: 2px;width: 16px;height: 6px;z-index: -5;background-color: gold;}
+        #history_list dd:nth-of-type(2) :nth-child(1)::before{content: '';display: block;position: absolute;left: calc(50% - 8px);bottom: 2px;width: 16px;height: 6px;z-index: -5;background-color: #eee;}
+        #history_list dd:nth-of-type(3) :nth-child(1)::before{content: '';display: block;position: absolute;left: calc(50% - 8px);bottom: 2px;width: 16px;height: 6px;z-index: -5;background-color: sandybrown;}
+        #history_list p:nth-child(1){text-align: center;width: 35px;position: relative;z-index: 10;font-weight: bold;}
+        #history_list p:nth-child(2){text-align: center;width: 60px;}
+        #history_list p:nth-child(3){text-align: center;flex: 1;font-weight: bold;}
+        #history_list p:nth-child(4){text-align: center;width: 40px;}
+        /* 状态框 */
+        #main_garage{width: 155px;height: 100px;position: absolute;left: -87px;bottom: 0;border: 2px solid #c2c8c9;display: flex;align-items: center;z-index: -5;background-color: #eee;transition: left 1s;}
+        #main_garage.out{left: -157px}
+        #main_garage>div{flex: 1;}
+        #main_garage>div:first-child{text-align: center;}
+        #main_garage>div:last-child{display: flex;flex-flow: column;align-items: center;height: 100%;}
+        #main_garage>div:last-child>div{flex:1}
+        #main_garage_img{margin-top: 12px;margin-left: 8px;}
+        #main_garage div.type{line-height: 50px;transform: translateY(5px);}
+        #main_garage div.cont{padding: 0 8px;}
+        #main_garage div.cont span{color: #bbb;font-size: 12px;}
+        #main_garage div.cont img{width: 5px;padding-left:4px;padding-bottom: 3px;}
+        @keyframes borderAction {
+            0%{border-color: #fff;}
+            50%{border-color: rgba(255, 255, 255, 0);}
+            100%{border-color: #fff;}
+        }
+        @keyframes borderIdea {
+            0%{border-color: #666;}
+            50%{border-color: rgba(255, 255, 255, 0);}
+            100%{border-color: #666;}
+        }
+        @keyframes borderIdeaHide{
+            0%{opacity: 1;}
+            100%{opacity: 0;}
+        }
+        @keyframes shake-opacity { 
+            0% { transform: translate(0px, 0px) rotate(0deg);}
+            10% { transform: translate(8px, 0px) rotate(-0.5deg);}
+            20% { transform: translate(8px, -6px) rotate(1.5deg);}
+            30% { transform: translate(-4px, 4px) rotate(-0.5deg);}
+            40% { transform: translate(4px, -2px) rotate(1.5deg);}
+            50% { transform: translate(8px, 2px) rotate(0.5deg);}
+            60% { transform: translate(-10px, -6px) rotate(-2.5deg);}
+            70% { transform: translate(8px, 4px) rotate(0.5deg);}
+            80% { transform: translate(-2px, 6px) rotate(-0.5deg);}
+            90% { transform: translate(-1px, 8px) rotate(-0.5deg);}
+        }
+    </style>
+</head>
+<body>
+    <main class="bg">
+        <!-- 游戏提示 -->
+        <section class="prompt">
+            <p><b>W</b>、<b>S</b>、<b>A</b>、<b>D</b>控制方向</p>
+            <p><b>J</b>攻击/确认</p>
+        </section>
+
+        <!-- 游戏区 -->
+        <section id="game_area">
+            <!-- 游戏选项 -->
+            <header class="">
+                <div id="player" class="on">
+                    <p class="action">单人模式</p>
+                    <p class="lock">双人模式</p>
+                </div>
+                <ul class="planeType">
+                    <li data-ammoName="普通弹"><img src="./img/thumbnail01.png" alt=""><h3>预备卫翼</h3></li>      <!-- 初始型号 -->
+                    <li data-ammoName="高速弹"><img src="./img/planeBlue.gif.png" alt=""><h3>战略核心</h3></li>    <!-- 击毁1架大飞机 -->
+                    <li data-ammoName="火箭烟花"><img src="./img/planeRed.gif.png" alt=""><h3>愤怒小鸟</h3></li>     <!-- 得分800分 -->
+                    <li class="lock" data-ammoName="急冻射线"><img src="./img/planeGreen.gif.png" alt=""><h3>战术智慧</h3></li>   <!-- 初始机得分200分 -->
+                    <li data-ammoName="粒子辐射"><img src="./img/planePink.gif.png" alt=""><h3>粒子光波</h3></li>    <!-- 得分100分 -->
+                    <li class="lock" data-ammoName="震爆弹"><img src="./img/planeYellow.gif.png" alt=""><h3>荣耀勋章</h3></li>  <!-- 击毁3架大飞机 -->
+                </ul>
+                <p id="gameStart" class=""><b>开始游戏</b></p>
+            </header>
+            <!-- 得分 -->
+            <p id="score">00000</p>
+            <!-- 结算 -->
+            <div id="game_over">
+                <div class="text">
+                    <p>YOU DIED</p>
+                    <p>游戏结束</p>
+                    <p id="last_score">500分</p>
+                </div>
+                <a href="#" class="active" id="repeat">再来一次</a>
+                <a href="#" id="history">历史得分</a>
+            </div>
+            <div id="history_list">
+                <h3>得分榜</h3>
+                <dl>
+                    <dt><p>TOP</p><p>主驾机型</p><p>得分</p><p>日期</p></dt>
+                    <dd><p></p></dd>
+                    <dd><p></p></dd>
+                    <dd><p></p></dd>
+                    <dd><p></p></dd>
+                    <dd><p></p></dd>
+                    <dd><p></p></dd>
+                    <dd><p></p></dd>
+                    <dd><p></p></dd>
+                    <dd><p></p></dd>
+                    <dd><p></p></dd>
+                    <!-- <dd class="last_dd">...</dd> -->
+                </dl>
+                <a href="#" class="active" id="repeat">再来一次</a>
+            </div>
+        </section>
+
+        <!-- 信息栏 -->
+        <div id="main_garage">
+            <div><img src="./img/thumbnail01.png" id="main_garage_img"></div>
+            <div>
+                <div class="type" style="color: saddlebrown;">普通弹</div>
+                <div class="cont">
+                    <span>待装载..</span>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+<script src="./system.js"></script>

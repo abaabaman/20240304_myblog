@@ -52,40 +52,46 @@ onMounted(() => {
 
 const clickNote = (id: string) => {
   active.value = id;
-  text.value = activeData.value.note;
-  console.log(activeData.value.note.slice(0, 50));
+  text.value = activeData.value?.note || '';
+  // location.pathname = id
+  console.log(location);
 };
 </script>
 
 <template>
-  <div class="flex banner">
-    <nav>
-      <dl>
-        <dt>秋风捎来了落叶</dt>
-        <dd v-for="item in initData" @click="clickNote(item.id)" :key="item.id"
-          :class="activeData?.id === item.id && 'active'">{{
-          item.date }}</dd>
-      </dl>
-      <dl v-for="types in Object.keys(data)" :key="types">
-        <dt>{{ typeListMap[types] }}</dt>
-        <dd v-for="item in data[types]" @click="clickNote(item.id)" :key="item.id"
-          :class="activeData?.id === item.id && 'active'">{{
-          item.title }}</dd>
-      </dl>
-    </nav>
-    <main>
-      <h1>{{ activeData?.title }}<span>{{ activeData?.date }}</span></h1>
-      <!-- <hr> -->
-      <MdPreview :editorId="id" :modelValue="activeData?.note" class="markdown" />
-      <MdCatalog :editorId="id" :scrollElement="scrollElement" />
-    </main>
+  <div class="box">
+    <div class="flex banner">
+      <nav>
+        <dl>
+          <dt>秋风捎来了落叶</dt>
+          <dd v-for="item in initData" @click="clickNote(item.id)" :key="item.id"
+            :class="activeData?.id === item.id && 'active'">{{
+            item.date }}</dd>
+        </dl>
+        <dl v-for="types in Object.keys(data)" :key="types">
+          <dt>{{ typeListMap[types] }}</dt>
+          <dd v-for="item in data[types]" @click="clickNote(item.id)" :key="item.id"
+            :class="activeData?.id === item.id && 'active'">{{
+            item.title }}</dd>
+        </dl>
+      </nav>
+      <main>
+        <h1>{{ activeData?.title }}<span>{{ activeData?.date }}</span></h1>
+        <!-- <hr> -->
+        <MdPreview :editorId="id" :modelValue="activeData?.note" class="markdown" />
+        <MdCatalog :editorId="id" :scrollElement="scrollElement" />
+      </main>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.box {
+  background-image: linear-gradient(90deg, #eee 50%, #fff 50%);
+}
+
 .flex {
   display: flex;
-
 }
 
 nav {

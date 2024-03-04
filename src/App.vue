@@ -1,27 +1,22 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import Header from './components/Header.vue'
-// import { ElButton } from 'element-plus'
-// export default {
-//   components: { ElButton },
-// }
+
 </script>
 
 <template>
   <Header />
-  <main>
-    <RouterView />
-  </main>
+  <RouterView />
 </template>
 
 <style scoped>
-main {
+/* main {
   position: absolute;
   width: 100%;
-  top: 4rem;
+  top: 60px;
   background-image: linear-gradient(90deg, #eee 50%, #fff 50%);
   transform: rotate(3reg);
-}
+} */
 
 
 
