@@ -1,27 +1,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, reactive, onBeforeMount, onUpdated } from 'vue'
-import { getTodoList, setTodoList } from '@/api/todolist.js'
+import { getTodoList, setTodoList } from '@/api/todolist.ts';
+import { DEFAULT_DATA, EMPTY_DATA, CN_RULE } from './constant';
+import { useTodoListStore } from '@/stores/todolist';
 
-const EMPTY_DATA = { id: 0, time: 0, content: '', done: true, tips: [] }
-const DEFAULT_DATA = [
-    {
-        id: 1709566560442, time: "3.6 15时", content: '跑步10公里', done: false, tips: [
-            { id: 1709566560449, time: "3.6 15时", content: '跑步1公里', done: true },
-            { id: 1709566560452, time: "3.6 15时", content: '歇一下', done: false },
-            { id: 1709566560453, time: "3.6 15时", content: '喝口水', done: false },
-            { id: 1709566560455, time: "3.6 15时", content: '跑步1公里', done: false },
-        ]
-    },
-    { id: 1709566560443, time: "3.6 15时", content: '俯卧撑100个', done: true, tips: [] },
-    { id: 1709566560445, time: "3.6 15时", content: '深蹲100个', done: true, tips: [] },
-    { id: 1709566560446, time: "3.6 15时", content: '仰卧起坐100个', done: true, tips: [] },
-]
-// const INIT_DATA = JSON.parse(localStorage.getItem('todolist') || null) || DEFAULT_DATA;
-const INIT_DATA = DEFAULT_DATA;
-const CN_RULE = /^(?:[\u3400-\u4DB5\u4E00-\u9FEA\uFA0E\uFA0F\uFA11\uFA13\uFA14\uFA1F\uFA21\uFA23\uFA24\uFA27-\uFA29]|[\uD840-\uD868\uD86A-\uD86C\uD86F-\uD872\uD874-\uD879][\uDC00-\uDFFF]|\uD869[\uDC00-\uDED6\uDF00-\uDFFF]|\uD86D[\uDC00-\uDF34\uDF40-\uDFFF]|\uD86E[\uDC00-\uDC1D\uDC20-\uDFFF]|\uD873[\uDC00-\uDEA1\uDEB0-\uDFFF]|\uD87A[\uDC00-\uDFE0])+$/;
+const todoListStore = useTodoListStore();
 
-const initData = ref(INIT_DATA);
-const addText = ref(null);
+const initStore = JSON.parse(localStorage.getItem('todolist') || null);
+const initData = ref(initStore || DEFAULT_DATA);
+// const addText = ref(null);
 const tipText = ref(null);
 const nameText = ref('');
 const tipsId = ref(1709566560442);
@@ -58,7 +45,17 @@ const add = ({ code }: { code: string }, selector: 'todo' | 'tips' = 'todo') => 
             default: return;
         }
     }
-}
+};
+
+todoListStore.$onAction((store) => {
+    store.after(content => {
+        todoListStore.$patch({ addText: '' });
+        const id = Date.now();
+        const time = `${new Date().getMonth() + 1}.${new Date().getDate()} ${+new Date().toLocaleTimeString().replace(/:.*/, '')}时`;
+        const done = false;
+        initData.value.push({ content, time, id, done, tips: [] });
+    });
+});
 
 const del = (id: number) => initData.value = initData.value.filter(e => e.id !== id);
 const clear = () => initData.value = [];
@@ -67,6 +64,7 @@ const tipOpen = (id: number, target) => {
     tipsVisible.value = true;
     tipsId.value = id;
 };
+
 const close = (ev: Event) => {
     const classList: string = ev.target?.classList?.value || '';
     const isClose = ['off', 'popCount', 'main'].some(e => classList.includes(e));
@@ -77,10 +75,12 @@ const close = (ev: Event) => {
     tipsId.value = 0;
     tipText.value = null;
 };
+
 const tipToggle = (id: number) => {
     const tips = activeData.value.tips;
     tips.forEach((tip) => { if (tip.id === id) tip.done = !tip.done })
 };
+
 const tipDel = (id: number) => activeData.value.tips = activeData.value.tips.filter(e => e.id !== id);
 
 const updataOpen = (who) => {
@@ -88,20 +88,22 @@ const updataOpen = (who) => {
     updataVisible.value = true;
 }
 
-const updataHandle = () => {
+const updataHandle = async () => {
     const name = nameText.value.match(CN_RULE)?.[0];
     if (!name) return;
     if (updataIsSave.value) {
         const list = JSON.stringify(initData.value)
-        console.log(name);
-        console.log();
-        console.log('save');
-        setTodoList({ name, list });
+        await setTodoList({ name, list });
     } else {
-        console.log(name);
-        console.log('read');
-        getTodoList({ name });
+        await getTodoList({ name }).then(({ data }) => {
+            if (data) initData.value = JSON.parse(data);
+        });
     }
+
+    updataVisible.value = false;
+    setTimeout(() => {
+        nameText.value = '';
+    }, 200);
 }
 
 watch(initData, () => {
@@ -157,7 +159,9 @@ onUpdated(() => {
                 <a @click="updataOpen('read')">read</a>&nbsp;
                 <div class="updata_model" :class="[opacity = updataVisible || 'hide', updataIsSave || 'save']">
                     <input type="text" placeholder="昵称(中文)" v-model="nameText">
-                    <button @click="updataHandle">{{ updataIsSave ? 'save' : 'read' }}</button>
+                    <button @click="updataHandle" :class="nameText.match(CN_RULE) || 'unrule'">{{ updataIsSave ? 'save'
+        : 'read'
+                        }}</button>
                 </div>
             </div>
             2024 todolist.cn
@@ -456,6 +460,11 @@ footer a {
 
         &:hover {
             background-color: var(--light-color);
+        }
+
+        &.unrule:hover {
+            background-color: #a84b4b;
+            cursor: not-allowed;
         }
     }
 }

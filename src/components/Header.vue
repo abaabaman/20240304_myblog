@@ -1,11 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, onUpdated } from 'vue';
+import { useTodoListStore } from '@/stores/todolist';
+// import router from '@/router'
+import { useRouter } from 'vue-router';
+
+const todoListStore = useTodoListStore();
+const router = useRouter();
+const isShowTodo = ref(false);
 
 const activeIndex = ref('1')
 const handleSelect = (key: string, keyPath: string[]) => {
     // 好像也没什么好操作的
     // console.log(key, keyPath)
 }
+
+const add = ({ code }: { code: string }) => {
+    if (['Enter', 'NumpadEnter'].includes(code)) todoListStore.pushText();
+};
+
+watch(() => router.currentRoute.value.href, () => isShowTodo.value = router.currentRoute.value.href.includes('todoList'));
 
 </script>
 
@@ -19,7 +32,8 @@ const handleSelect = (key: string, keyPath: string[]) => {
                     <h1>包包的博客</h1>
                 </el-menu-item>
                 <div class="flex-grow">
-                    <input type="text" class="todo" placeholder="添加ToDo" />
+                    <input type="text" class="todo" placeholder="添加ToDo" v-model="todoListStore.addText" @keydown="add"
+                        v-if="isShowTodo" />
                 </div>
                 <el-menu-item index="1" @click="$router.push('/blog')">博客</el-menu-item>
                 <el-menu-item index="2" @click="$router.push('/note')">笔记</el-menu-item>

@@ -1,6 +1,6 @@
 <?php
     header('content-type:text/html;charser=utf-8');
-    header('Access-Control-Allow-Origin:*');
+    // header('Access-Control-Allow-Origin:*');
     
 
     $mysql_conf = array(

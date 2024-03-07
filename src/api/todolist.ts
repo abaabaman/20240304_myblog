@@ -4,18 +4,17 @@ import { BASE_URL } from '../constant/url'
 
 // 全部笔记本
 export function getTodoList (params) {
-  console.log(params);
   return axios({
-    url: `${BASE_URL}/todoList_get.php`,
+    url: `${BASE_URL}/todolist_get.php`,
     method: 'get',
     params
   })
 };
 
 export function setTodoList (data) {
-  console.log(data);
   return axios({
-    url: `${BASE_URL}/todoList_set.php`,
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    url: `${BASE_URL}/todolist_set.php`,
     method: 'post',
     data
   })

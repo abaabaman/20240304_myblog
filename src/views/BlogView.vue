@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 // import { axios } from '@/utils/request'
 // import axios from 'axios'
 import { MdPreview, MdCatalog } from 'md-editor-v3';
-import { getNoteList } from '@/api/notelist'
+import { getNoteList } from '@/api/notelist.ts'
 import 'md-editor-v3/lib/preview.css';
 
 
@@ -13,7 +13,7 @@ const active = ref('1');
 const initData = ref([]);
 
 getNoteList()
-  .then(({ data }) => {
+  .then(({ data }: { data: any }) => {
     initData.value = data;
     active.value = data[data.length - 1].id;
     // setTimeout(() => {
