@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { RouterLink, RouterView } from 'vue-router'
+
 const activeIndex = ref('1')
 const handleSelect = (key: string, keyPath: string[]) => {
-    console.log(key, keyPath)
+    // 好像也没什么好操作的
+    // console.log(key, keyPath)
 }
 
 </script>
@@ -17,7 +18,9 @@ const handleSelect = (key: string, keyPath: string[]) => {
                     <img style="width: 40px;margin-right: 12px" src="@/common/images/logo.png" alt="Element logo" />
                     <h1>包包的博客</h1>
                 </el-menu-item>
-                <div class="flex-grow" />
+                <div class="flex-grow">
+                    <input type="text" class="todo" placeholder="添加ToDo" />
+                </div>
                 <el-menu-item index="1" @click="$router.push('/blog')">博客</el-menu-item>
                 <el-menu-item index="2" @click="$router.push('/note')">笔记</el-menu-item>
                 <el-sub-menu index="3">
@@ -31,39 +34,32 @@ const handleSelect = (key: string, keyPath: string[]) => {
     </header>
 </template>
 
-<!-- <template>
-    <header>
-        <div class="banner ">
-            <div class="left">
-                <img alt="Vue logo" class="logo" src="@/common/images/logo.svg" width="35" height="35" />
-                <h1>这是我的标题</h1>
-            </div>
-            <nav class="right">
-                <RouterLink to="/">博客</RouterLink>
-                <RouterLink to="/note">笔记</RouterLink>
-
-                <a class="more">
-                    <span>更多...</span>
-                    <div class="sub_menu">
-                        <div>
-                            <RouterLink to="/todolist">待办</RouterLink>
-                        </div>
-                        <div>
-                            <RouterLink to="/game">小游戏</RouterLink>
-                        </div>
-                        <div>
-                            <RouterLink to="/empty">更多的更多...</RouterLink>
-                        </div>
-                    </div>
-                </a>
-            </nav>
-        </div>
-    </header>
-</template> -->
-
 <style scoped>
 .flex-grow {
     flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.todo {
+    width: 240px;
+    height: 36px;
+    font-size: 16px;
+    margin-top: 12px;
+    text-indent: 10px;
+    border-radius: 5px;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.24), 0 1px 3px rgba(0, 0, 0, 0.35) inset;
+    border: 2px solid transparent;
+
+    &:hover {
+        border: 2px solid var(--light-color);
+    }
+
+    &:focus {
+        border: 2px solid var(--main-color);
+        /* background-color: red; */
+        outline: none;
+    }
 }
 
 header {

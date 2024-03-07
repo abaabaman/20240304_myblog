@@ -1,7 +1,22 @@
 @import './base.css';
 
+:root {
+    --main-color: #62709c;
+    --light-color: #93bad4;
+    --light9-color:#e6f0f5;
+    --el-color-primary: var(--main-color) !important;
+    --el-color-primary-light-3: var(--light-color) !important;
+    --el-color-primary-light-9: var(--light9-color) !important;
+}
+
 * {
     box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+    height: 100%;
 }
 
 .banner {

@@ -1,18 +1,26 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import axios from 'axios'
+// import { axios } from '@/utils/request'
+// import axios from 'axios'
 import { MdPreview, MdCatalog } from 'md-editor-v3';
+import { getNoteList } from '@/api/notelist'
 import 'md-editor-v3/lib/preview.css';
+
 
 const id = 'preview-only';
 const scrollElement = document.documentElement;
 const active = ref('1');
-const initData = ref([
-  { id: '1', type: 'js', date: "20.11.22", title: 'DOM&BOM', note: 'ddddddd' },
-  { id: '2', type: 'js', date: "20.11.12", title: '数据类型', note: 'ddddddd' },
-  { id: '3', type: 'xr', date: "20.11.12", title: 'Unity基本概述', note: 'ddddddd' },
-  { id: '4', type: 'xr', date: "20.11.12", title: 'api', note: 'ddddddd' },
-]);
+const initData = ref([]);
+
+getNoteList()
+  .then(({ data }) => {
+    initData.value = data;
+    active.value = data[data.length - 1].id;
+    // setTimeout(() => {
+    // }, 3000);
+  });
+
+
 const text = ref(`# BOM
 ​	Brower Object Model游览器对象模型
 
@@ -35,21 +43,6 @@ const data = computed(() => {
 })
 
 const activeData = computed(() => initData.value.find(({ id }) => id === active.value))
-
-onMounted(() => {
-  axios({
-    method: 'get',
-    // url: '@/../vue_myblog/interface/noteList_get.php',
-    url: 'http://localhost/vue_myblog/interface/noteList_get.php',
-    responseType: 'json'
-  })
-    .then(({ data }) => {
-      initData.value = data;
-      active.value = data[data.length - 1].id;
-    });
-})
-
-
 const clickNote = (id: string) => {
   active.value = id;
   text.value = activeData.value?.note || '';
