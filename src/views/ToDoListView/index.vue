@@ -20,19 +20,15 @@ const doneList = computed(() => initData.value.filter(({ done }) => done));
 const activeData = computed(() => initData.value.find(({ id }) => id === tipsId.value) || EMPTY_DATA);
 const activeTipsIsMax = computed(() => activeData.value.tips.length >= 4);
 
-const add = ({ code }: { code: string }, selector: 'todo' | 'tips' = 'todo') => {
+const add = ({ code }: { code: string }, selector: 'update' | 'tips') => {
     const id = Date.now();
     const time = `${new Date().getMonth() + 1}.${new Date().getDate()} ${new Date().toLocaleTimeString().replace(/:.*/, '')}时`;
     const done = false;
 
     if (['Enter', 'NumpadEnter'].includes(code)) {
         switch (selector) {
-            case 'todo': {
-                console.log('todo');
-                if (!addText.value) return;
-                const content = addText.value;
-                initData.value.push({ content, time, id, done, tips: [] });
-                addText.value = null;
+            case 'update': {
+                updataHandle();
                 break;
             };
             case 'tips': {
@@ -158,7 +154,7 @@ onUpdated(() => {
                 <a @click="updataOpen('save')">save</a>&nbsp;
                 <a @click="updataOpen('read')">read</a>&nbsp;
                 <div class="updata_model" :class="[opacity = updataVisible || 'hide', updataIsSave || 'save']">
-                    <input type="text" placeholder="昵称(中文)" v-model="nameText">
+                    <input type="text" placeholder="昵称(中文)" v-model="nameText" @keydown="(ev) => add(ev, 'update')">
                     <button @click="updataHandle" :class="nameText.match(CN_RULE) || 'unrule'">{{ updataIsSave ? 'save'
         : 'read'
                         }}</button>

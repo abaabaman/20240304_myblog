@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import BlogView from '../views/BlogView.vue'
+import BlogView from '../views/BlogView/index.vue'
 import NoteView from '../views/NoteView.vue'
 import GameView from '../views/GameView.vue'
 import ToDoListView from '../views/ToDoListView/index.vue'
@@ -15,32 +15,32 @@ const router = createRouter({
     {
       path: '/blog',
       name: 'blog',
-      meta:{
-        title:'包包博客'
+      meta: {
+        title: '包包博客'
       },
       component: BlogView
     },
     {
       path: '/note',
       name: 'ndte',
-      meta:{
-        title:'包包笔记本'
+      meta: {
+        title: '包包笔记本'
       },
       component: NoteView
     },
     {
       path: '/game',
       name: 'game',
-      meta:{
-        title:'键盘操作'
+      meta: {
+        title: '键盘操作'
       },
       component: GameView
     },
     {
       path: '/todoList',
       name: 'todoList',
-      meta:{
-        title:'写点什么'
+      meta: {
+        title: '写点什么'
       },
       component: ToDoListView
     },

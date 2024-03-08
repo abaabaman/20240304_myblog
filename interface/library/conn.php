@@ -1,6 +1,6 @@
 <?php
     header('content-type:text/html;charser=utf-8');
-    // header('Access-Control-Allow-Origin:*');
+    header('Access-Control-Allow-Origin:*');
     
 
     $mysql_conf = array(
@@ -8,6 +8,7 @@
         'db_user' => 'root',
         'db_pass' => '123456',
         'db' => '20240304_myblog'
+        // 'db' => '20240304_myblog'
     );
 
     $mysqli = @new mysqli($mysql_conf['host'], $mysql_conf['db_user'], $mysql_conf['db_pass']);

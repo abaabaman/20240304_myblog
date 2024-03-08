@@ -1,6 +1,6 @@
 import axios from 'axios'
 // import { axios } from '@/utils/request'
-import { BASE_URL } from '../constant/url.js';
+import { BASE_URL } from '@/constant/url';
 
 // 全部笔记本
 export function getNoteList(params = {}) {

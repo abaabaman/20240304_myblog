@@ -15,6 +15,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 }
 
 const add = ({ code }: { code: string }) => {
+    if (!todoListStore.addText) return;
     if (['Enter', 'NumpadEnter'].includes(code)) todoListStore.pushText();
 };
 
