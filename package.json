@@ -14,7 +14,9 @@
   },
   "dependencies": {
     "element-plus": "^2.6.0",
+    "lodash": "^4.17.21",
     "md-editor-v3": "^4.11.3",
+    "pinia": "^2.1.7",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"
   },

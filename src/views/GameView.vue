@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import TheWelcome from '../components/TheWelcome.vue'
-// require('../components/GameCOmponents/game/web_plane_war 21.08.10/paly.html')
+const iframeRef = ref(null);
+
+onMounted(() => {
+    iframeRef.value?.focus();
+})
 
 </script>
 
 <template>
     <main>
-        <iframe src="/public/web_plane_war 21.08.10/play.html" class="game" frameborder="0"></iframe>
+        <iframe src="/public/web_plane_war 21.08.10/play.html" class="game" frameborder="0" ref="iframeRef"></iframe>
     </main>
 </template>
 
