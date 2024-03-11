@@ -1,0 +1,7 @@
+[
+    {
+        "argument": ["element1","element2","element3"],
+        "return": "新数组长度",
+        "remark": "改变原数组"
+    }
+]

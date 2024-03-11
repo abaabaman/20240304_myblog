@@ -23,3 +23,9 @@ body,
     max-width: 1280px;
     margin: 0 auto;
 }
+
+
+/* 改写 */
+.page-note .md-editor-preview-wrapper {
+    padding: 0 !important;
+}

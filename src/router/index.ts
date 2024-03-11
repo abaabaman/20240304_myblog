@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import BlogView from '../views/BlogView/index.vue'
-import NoteView from '../views/NoteView.vue'
+import NoteView from '../views/NoteView/index.vue'
 import GameView from '../views/GameView.vue'
 import ToDoListView from '../views/ToDoListView/index.vue'
 import MoreView from '../views/MoreView.vue'
