@@ -15,7 +15,7 @@ const codeBlock = ref('helloworld')
 const fiterTags = ref(JSON.parse(localStorage.getItem('formula_tags') || null) || ['js'])
 const search = ref('')
 const drawerVisible = ref(false);
-const isAdmin = location.hash.includes('user=admin');
+const isAdmin = location.search.includes('user=admin');
 // ?user=admin
 
 
