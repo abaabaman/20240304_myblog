@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, watch, reactive, onBeforeMount, onUpdated } from 'vue'
 import { getTodoList, setTodoList } from '@/api/todolist.ts';
 import { DEFAULT_DATA, EMPTY_DATA, CN_RULE } from './constant';
-import { useTodoListStore } from '@/stores/todolist';
+import { useTodoListStore } from '@/stores/headerSearch';
 
 const todoListStore = useTodoListStore();
 
@@ -45,6 +45,8 @@ const add = ({ code }: { code: string }, selector: 'update' | 'tips') => {
 
 todoListStore.$onAction((store) => {
     store.after(content => {
+        console.log(content);
+
         todoListStore.$patch({ addText: '' });
         const id = Date.now();
         const time = `${new Date().getMonth() + 1}.${new Date().getDate()} ${+new Date().toLocaleTimeString().replace(/:.*/, '')}时`;
@@ -701,4 +703,4 @@ footer a {
         padding: 0 10px;
     }
 }
-</style>
+</style>@/stores/headerSearch

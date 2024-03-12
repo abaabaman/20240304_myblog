@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import BlogView from '../views/BlogView/index.vue'
-import NoteView from '../views/NoteView/index.vue'
+import FormulaView from '../views/FormulaView/index.vue'
 import GameView from '../views/GameView.vue'
 import ToDoListView from '../views/ToDoListView/index.vue'
 import MoreView from '../views/MoreView.vue'
@@ -21,12 +21,12 @@ const router = createRouter({
       component: BlogView
     },
     {
-      path: '/note',
-      name: 'ndte',
+      path: '/formula',
+      name: 'formula',
       meta: {
-        title: '包包笔记本'
+        title: '包包炼金屋'
       },
-      component: NoteView
+      component: FormulaView
     },
     {
       path: '/game',

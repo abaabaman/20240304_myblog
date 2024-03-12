@@ -1,16 +1,25 @@
 <script setup lang="ts">
+import AddFormula from './AddFormula.vue'
 import { MdPreview, MdCatalog } from 'md-editor-v3'
 import 'md-editor-v3/lib/preview.css'
 import { getFormula } from '@/api/formula'
-import { ref, computed, onUpdated, reactive } from 'vue'
+import { ref, computed, onUpdated, reactive, watch } from 'vue'
+import { useFormulaStore } from '@/stores/headerSearch';
+
+const formulaStore = useFormulaStore();
 
 const id = 'preview-only'
 const active = ref('10000');
 const data = ref<any[]>([]);
 const codeBlock = ref('helloworld')
-const fiterTags = ref(['js'])
+const fiterTags = ref(JSON.parse(localStorage.getItem('formula_tags') || null) || ['js'])
+const search = ref('')
+const drawerVisible = ref(false);
+const isAdmin = location.hash.includes('user=admin');
+// ?user=admin
 
-getFormula().then(({ data: res }: { res: any[] }) => {
+
+getFormula().then(({ data: res }: any) => {
   codeBlock.value = '```js\r' + res[0].example + '\r ```';
   data.value = res;
 });
@@ -22,28 +31,48 @@ const clickCard = (ev, i, code) => {
   active.value = i;
 };
 
-const tagDel = (tag) => fiterTags.value = fiterTags.value.filter(e => e !== tag);
-const tagAdd = (tag) => fiterTags.value = [...new Set([...fiterTags.value, tag])];
+// const searchDel = () => search.value = '';
+const tagDel = (tag: string) => fiterTags.value = fiterTags.value.filter(e => e !== tag);
+const tagAdd = (tag: string) => fiterTags.value = [...new Set([...fiterTags.value, tag])];
 const tagClear = () => fiterTags.value = [];
 
-const fiterData = computed(() => data.value.filter(({ tags }) => {
-  const cardTag = parse(tags);
-  const bool = fiterTags.value.every(tag => cardTag.includes(tag))
-  return bool;
-}))
+const fiterData = computed(() => data.value
+  .filter(({ tags }) => {
+    const cardTag = parse(tags);
+    const bool = fiterTags.value.every(tag => cardTag.includes(tag))
+    return bool;
+  })
+  .filter(({ cn_title, en_title }) => {
+    return en_title.includes(search.value) || cn_title.includes(search.value)
+  }))
+
+const openVariety = () => drawerVisible.value = true;
+const closeVariety = () => drawerVisible.value = false;
 
 onUpdated(() => {
   // console.log(data.value[1]);
-  // console.log(JSON.stringify(JSON.parse(data.value[1].argument)[0].argument, null, 2));
 })
+
+watch(fiterTags, () => localStorage.setItem('formula_tags', JSON.stringify(fiterTags.value)))
+
+formulaStore.$onAction((store) => {
+  store.after(content => {
+    search.value = content;
+    // formulaStore.$patch({ keyword: '' });
+  });
+});
+
 </script>
 
 <template>
   <div class="search" v-if="fiterTags.length">
-    <p class="tags"><span v-for="tag in fiterTags" :key="tag" @click="tagDel(tag)">{{ tag }}</span></p>
+    <p class="tags">
+      <span v-for="tag in fiterTags" :key="tag" @click="tagDel(tag)">{{ tag }}</span>
+    </p>
     <p class="clear"><span @click="tagClear">×</span></p>
   </div>
   <div class="box banner">
+    <div class="card" v-if="isAdmin"><el-button style="width: 100%;" @click="openVariety">添加</el-button></div>
     <div class="card" v-for="formula in fiterData" :key="formula.id"
       @click="(ev) => clickCard(ev, formula.id, formula.example)">
       <h3>{{ formula.en_title }}</h3>
@@ -70,11 +99,11 @@ onUpdated(() => {
             <p><span>{{ variety.remark }}</span></p>
           </div>
         </div>
-        <MdPreview :editorId="id" :modelValue="codeBlock" class="markdown page-note" />
+        <MdPreview :editorId="id" :modelValue="codeBlock" class="markdown page-formula" />
       </div>
-
     </div>
   </div>
+  <add-formula :drawerVisible="drawerVisible" :closeVariety="closeVariety"></add-formula>
 </template>
 
 <style scoped>
@@ -157,6 +186,10 @@ onUpdated(() => {
     &:hover {
       color: rgb(202, 104, 104);
     }
+  }
+
+  .keyword {
+    background-color: var(--light6-color);
   }
 }
 
