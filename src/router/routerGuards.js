@@ -2,6 +2,6 @@
 import router from './index.ts'
 
 router.beforeEach(({ meta }) => {
-  document.title = meta.title || '包包博客';
+  document.title = meta.title || '包包小窝';
   return true;
 })

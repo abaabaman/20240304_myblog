@@ -1,8 +1,9 @@
-import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import BlogView from '../views/BlogView/index.vue'
 import FormulaView from '../views/FormulaView/index.vue'
 import GameView from '../views/GameView.vue'
 import ToDoListView from '../views/ToDoListView/index.vue'
+import EatingListView from '../views/EatingListView/index.vue'
 import MoreView from '../views/MoreView.vue'
 
 const router = createRouter({
@@ -16,7 +17,7 @@ const router = createRouter({
       path: '/blog',
       name: 'blog',
       meta: {
-        title: '包包博客'
+        title: '包包小窝'
       },
       component: BlogView
     },
@@ -43,6 +44,14 @@ const router = createRouter({
         title: '写点什么'
       },
       component: ToDoListView
+    },
+    {
+      path: '/eatList',
+      name: 'eatList',
+      meta: {
+        title: '吃点什么'
+      },
+      component: EatingListView
     },
     {
       path: '/empty',

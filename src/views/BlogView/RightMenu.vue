@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue';
 
 const props = defineProps(['list', 'title', 'click']);
 
+console.log(props.list);
 
 </script>
 

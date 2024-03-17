@@ -44,7 +44,7 @@ watch(
       <div class="banner">
         <el-menu-item index="0" @click="$router.push('/')">
           <img style="width: 40px; margin-right: 12px" src="@/common/images/logo.png" alt="Element logo" />
-          <h1>包包的博客</h1>
+          <h1>包包的小窝</h1>
         </el-menu-item>
         <div class="flex-grow">
           <input type="text" class="todo" placeholder="添加ToDo" v-model="todoListStore.addText" @keydown="addTodo"
@@ -52,7 +52,7 @@ watch(
           <input type="text" class="todo" placeholder="搜索" v-model="formulaStore.keyword" @keydown="addFormula"
             v-if="isShowFormula" key="fff" />
         </div>
-        <el-menu-item index="1" @click="$router.push('/blog')">博客</el-menu-item>
+        <el-menu-item index="1" @click="$router.push('/blog')">主页</el-menu-item>
         <el-menu-item index="2" @click="$router.push('/formula')">配方</el-menu-item>
         <el-sub-menu index="3">
           <template #title>更多...</template>

@@ -1,5 +1,14 @@
 @import './base.css';
 
+/* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+/* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+@font-face {
+    font-family: 'iconfont';  /* Project id 4469007 */
+    src: url('//at.alicdn.com/t/c/font_4469007_rtk19as6n0q.woff2?t=1710687611588') format('woff2'),
+         url('//at.alicdn.com/t/c/font_4469007_rtk19as6n0q.woff?t=1710687611588') format('woff'),
+         url('//at.alicdn.com/t/c/font_4469007_rtk19as6n0q.ttf?t=1710687611588') format('truetype');
+  }
+
 :root {
     --main-color: #62709c;
     --light-color: #93bad4;
@@ -9,6 +18,10 @@
     --el-color-primary-light-3: var(--light-color) !important;
     --el-color-primary-light-6: var(--light6-color) !important;
     --el-color-primary-light-9: var(--light9-color) !important;
+}
+
+.md-editor-catalog-active>span,.md-editor-catalog span:hover {
+    color: rgb(255, 118, 55) !important;
 }
 
 * {

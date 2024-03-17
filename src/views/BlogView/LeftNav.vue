@@ -1,7 +1,17 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { typeListMap } from './constant';
 
-defineProps(['dataMonth', 'dataMap', 'active', 'click'])
+const props = defineProps(['dataMonth', 'dataMap', 'active', 'click']);
+
+const monthList = computed(() => {
+    // const 
+    const arr = Object.keys(props.dataMonth).sort((a, b) => {
+        const re = (str) => str.replace('年', '.').slice(0, -1);
+        return re(b) - re(a)
+    })
+    return arr
+})
 
 </script>
 
@@ -9,7 +19,7 @@ defineProps(['dataMonth', 'dataMap', 'active', 'click'])
     <nav>
         <dl>
             <dt style="cursor: default;">秋风捎来了落叶</dt>
-            <dd v-for="title in Object.keys(dataMonth)" :key="title" @click="click(['month', title])"
+            <dd v-for="title in monthList" :key="title" @click="click(['month', title])"
                 :class="active[1] === title && 'active'">{{ title }}</dd>
         </dl>
         <dl v-for="types in Object.keys(dataMap) " :key="types">

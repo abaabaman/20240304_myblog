@@ -65,15 +65,17 @@ formulaStore.$onAction((store) => {
 </script>
 
 <template>
-  <div class="search" v-if="fiterTags.length">
-    <p class="tags">
-      <span v-for="tag in fiterTags" :key="tag" @click="tagDel(tag)">{{ tag }}</span>
-    </p>
-    <p class="clear"><span @click="tagClear">×</span></p>
+  <div class="banner">
+    <div class="search" v-if="fiterTags.length">
+      <p class="tags">
+        <span v-for="tag in fiterTags" :key="tag" @click="tagDel(tag)">{{ tag }}</span>
+      </p>
+      <p class="clear"><span @click="tagClear">×</span></p>
+    </div>
   </div>
   <div class="box banner">
     <div class="card" v-if="isAdmin"><el-button style="width: 100%;" @click="openVariety">添加</el-button></div>
-    <div class="card" v-for="formula in fiterData" :key="formula.id"
+    <div class="card" :class="active === formula.id && 'active'" v-for="formula in fiterData" :key="formula.id"
       @click="(ev) => clickCard(ev, formula.id, formula.example)">
       <h3>{{ formula.en_title }}</h3>
       <div class="sub">
@@ -116,21 +118,21 @@ formulaStore.$onAction((store) => {
 }
 
 .card {
-  /* column-count: 3; */
+  cursor: pointer;
   -webkit-column-break-inside: avoid;
   counter-reset: unset;
   padding: 10px;
   margin-bottom: 10px;
-  /* margin: 10px 0; */
   border: 2px solid #ccc;
   border-radius: 8px;
 
   &:hover {
-    border-color: var(--main-color);
+    box-shadow: 3px 3px 10px 0px #0003 inset;
   }
 
   &.active {
-    border-color: var(--light-color);
+    box-shadow: 3px 3px 10px 0px #0003 inset;
+    z-index: 20;
   }
 
   h3 {
